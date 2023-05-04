@@ -1,0 +1,25 @@
+{% extends "auth_base.html" %}
+
+{% block form %}
+<!-- Login form -->
+<form method="post" action="/login" class="box">
+     {% csrf-field %}
+     <div>
+          <div>
+               <div class="inputBox">
+                    <input type="email" required name="email" value="">
+                    <label>Username</label>
+               </div>
+               <div class="inputBox">
+                    <input type="password" required name="password" value="">
+                    <label>Password</label>
+               </div>
+               <div class="row justify-content-between">
+                    <a href="/signup" class="btn bn-link">Sign up</a>
+                    <input type="submit" value="Sign In">
+               </div>
+          </div>
+     </div>
+</form>
+
+{% endblock form %}

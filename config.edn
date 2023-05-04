@@ -1,0 +1,30 @@
+;; Copyright 2023 Dalitso Sakala <htts://dalitsosakala.github.io>
+;; 
+;; Licensed under the Apache License, Version 2.0 (the "License");
+;; you may not use this file except in compliance with the License.
+;; You may obtain a copy of the License at
+;; 
+;;     http://www.apache.org/licenses/LICENSE-2.0
+;; 
+;; Unless required by applicable law or agreed to in writing, software
+;; distributed under the License is distributed on an "AS IS" BASIS,
+;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;; See the License for the specific language governing permissions and
+;; limitations under the License.
+
+
+{:port 3000
+
+
+ :database {:classname   "com.mysql.jdbc.Driver"
+            :subprotocol "mysql"
+            :subname "//localhost:3306/ridehailing"
+            :user "root"
+            :dbtype "mysql"
+            :dbname "ridehailing"
+            :password "1234"
+            :useSSL false,
+            :allowPublicKeyRetrieval true
+            :port "3306"}
+;;  :database {:connection-uri "jdbc:mysql://localhost:3306/ridehailing?user=root&password=1234&useSSL=false"}
+ }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to ride-hailing</title>
+
+  <!-- styles -->
+  {% style "/assets/bulma/css/bulma.min.css" %}
+  {% style "/assets/material-icons/css/material-icons.min.css" %}
+
+  {% style "/css/screen.css" %}
+
+  {% block css %}
+  {% endblock %}
+</head>
+
+<body>
+  <!-- navbar -->
+  <nav class="navbar is-info">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/" style="font-weight:bold;">Ride hailing</a>
+        <span class="navbar-burger burger" data-target="nav-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </div>
+      <div id="nav-menu" class="navbar-menu">
+        <div class="navbar-start">
+          <a href="/" class="navbar-item{% ifequal page " home.html" %} is-active{%endifequal%}">Home</a>
+          {% if user %}
+          <a href="/booking" class="navbar-item{% ifequal page " about.html" %} is-active{%endifequal%}">Ride booking</a>
+          {% endif %}
+        </div>
+
+        <div class="navbar-end ">
+          {% if user %}
+          <div class="row align-items-center">
+            <span>{{user.first_name}} {{user.last_name}}</span>
+            <a href="/logout" class="btn btn-danger shadow">Logout</a>
+          </div>
+          {%else%}
+          <a href="/login" class="navbar-item{% ifequal page " login.html" %} is-active{%endifequal%}">Login</a>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="container">
+    <section class="section">
+      <div class="container">
+        {% block page %}
+        {% endblock %}
+      </div>
+    </section>
+
+    <!-- scripts -->
+    <script type="text/javascript">
+      (function () {
+        var burger = document.querySelector('.burger');
+        var nav = document.querySelector('#' + burger.dataset.target);
+        burger.addEventListener('click', function () {
+          burger.classList.toggle('is-active');
+          nav.classList.toggle('is-active');
+        });
+      })();
+    </script>
+
+
+    {% block page-scripts %}
+    {% endblock %}
+
+
+    <footer>
+      <p class="p-3">Copyright &copy; Ride Hailing Co. {{now}}</p>
+    </footer>
+  </div>
+
+</body>
+
+</html>

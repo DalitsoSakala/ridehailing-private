@@ -1,0 +1,169 @@
+body {
+    margin: 0;
+    vertical-align: middle;
+}
+h1 {
+    margin-top: 10%;
+    margin-left: 35%;
+    font-size: 50px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+#navbar {
+    background-color: hsl(208, 100%, 50%);
+    /* overflow: hidden; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1%;
+    height: 10%;
+    width: 100%;
+    box-shadow: 0px 0px 12px#0077ff;
+}
+
+#car {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    text-align: center;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#Menu {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.box {
+    display: grid;
+    justify-content: center;
+    width: 90%;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    border: 1px solid #dadce0;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    margin: auto;
+  }
+
+  @media (min-width: 760px) {
+    .box{
+      width: 400px;
+    }
+  }
+  
+  .box h2 {
+    margin: 0px 0 -0.125rem;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    color: #202124;
+    font-family: 'Google Sans','Noto Sans Myanmar UI',arial,sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+  }
+
+  .box p {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: .1px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  
+  .box .inputBox {
+    position: relative;
+  }
+  
+  .box .inputBox input {
+    width: 93%;
+    padding: 0.625rem 10px;
+    font-size: 1rem;
+    letter-spacing: 0.062rem;
+    margin-bottom: 1.875rem;
+    border: 1px solid #ccc;
+    background: transparent;
+    border-radius: 4px;
+    
+  }
+  
+  .box .inputBox label {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    padding: 0.625rem 0;
+    font-size: 1rem;
+    color: grey;
+    pointer-events: none;
+    transition: 0.5s;
+  }
+  
+  .box .inputBox input:focus ~ label,
+  .box .inputBox input:valid ~ label,
+  .box .inputBox input:not([value=""]) ~ label {
+    top: -1.125rem;
+    left: 10px;
+    color: #1a73e8;
+    font-size: 0.75rem;
+    background-color: white;
+    height: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .box .inputBox input:focus {
+    outline: none;
+    border: 2px solid #1a73e8;
+  }
+  .box input[type="submit"] {
+    border: none;
+    outline: none;
+    color: #fff;
+    background-color: #1a73e8;
+    padding: 0.625rem 1.25rem;
+    cursor: pointer;
+    border-radius: 0.312rem;
+    font-size: 1rem;
+    float: right;
+  }
+  
+  .box input[type="submit"]:hover {
+    background-color: #287ae6;
+    box-shadow: 0 1px 1px 0 rgba(66,133,244,0.45), 0 1px 3px 1px rgba(66,133,244,0.3);
+}
+
+.box .inputBox input:focus ~ label,
+.box .inputBox input:valid ~ label,
+.box .inputBox input:not([value=""]) ~ label {
+    top: -1.125rem;
+    left: 10px;
+    color: #1a73e8;
+    font-size: 0.75rem;
+    background-color: white;
+    height: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.box .inputBox input:focus {
+            outline: none;
+            border: 2px solid #1a73e8;
+}
