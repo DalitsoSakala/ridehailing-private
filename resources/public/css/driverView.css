@@ -1,0 +1,80 @@
+#declineButton {
+    background-color: blue;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    border-style: none;
+    color: white;
+}
+#acceptButton {
+    background-color: blue;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    border-style: none;
+    color: white; 
+}
+#Buttons {
+    display: flex;
+    justify-content: space-between;
+}
+#destination {
+    color: blue;
+    font-size:small;
+}
+#start-location {
+    color: #00b4d8;
+    font-size: small;
+}
+#details {
+    display: inline-flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+#locationDetails {
+    padding: 10px;
+}
+#profile {
+    width: 100px;
+    height: 100px;
+    color: blue;
+    border-style: solid;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+h1 {
+    margin: 20px;
+}
+#box {
+    position:absolute;
+    left: 40%;
+    top: 20%;
+    width: fit-content;
+    border-style: none;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba( 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#prompt {
+    color: #00b4d8;
+}
+#name {
+    color: grey;
+    font-size: 25px;
+}
+#price {
+    color: grey;
+    font-size: 25px;
+}
+#distance {
+    color: grey;
+    font-size: 15px;
+    padding-bottom: 15px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+p {
+    color: grey;
+}
