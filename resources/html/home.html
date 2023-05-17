@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
 
+{% block meta %}
+{% ifequal user.role "driver" %}
+{% if vehicle %}
+{%else%}
+<meta http-equiv="refresh" content="0; url=/dashboard">
+{% endif %}
+{% endifequal %}
+{% endblock meta %}
 
 
 {% block page %}
