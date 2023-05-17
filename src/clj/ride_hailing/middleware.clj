@@ -8,6 +8,7 @@
    [muuntaja.middleware :refer [wrap-format wrap-params]]
    [ring.util.response :as response]
    [ride_hailing.models.user :as userdb]
+   [ride_hailing.models.vehicle :as vehicledb]
    [ride-hailing.config :refer [env]]
    [ring.middleware.session :as session]
    [ring.middleware.session.memory :as store]
@@ -125,6 +126,15 @@
 
     (let [params (:params request)]
       (userdb/insert-user params))
+  ;;
+
+    (handler request)))
+
+(defn handle-vehicle-addition [handler]
+  (fn [request]
+
+    (let [params (:params request)]
+      (vehicledb/insert-vehicle params))
   ;;
 
     (handler request)))
