@@ -13,8 +13,9 @@ img {
     max-height: auto;
 }
 .orderBox {
+    top: 20vh;
     position: absolute;
-    top: 50%;
+    transform: scale(.9);
     left: 30%;
     background-color: white;
     box-shadow: grey;
@@ -27,7 +28,7 @@ img {
     transition: 0.5s;
 }
 .orderBox:hover {
-    top:60%;
+    transform: scale(1);
 }
 #orderButton {
     background-color:blue;

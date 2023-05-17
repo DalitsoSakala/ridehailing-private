@@ -5,9 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Welcome to ride-hailing</title>
+  {% style "/node_modules/bootstrap/dist/css/bootstrap.min.css" %}
+  {% style "/node_modules/font-awesome/css/font-awesome.min.css" %}
 
   <!-- styles -->
-  {% style "/assets/bulma/css/bulma.min.css" %}
   {% style "/assets/material-icons/css/material-icons.min.css" %}
 
   {% style "/css/screen.css" %}
@@ -16,71 +17,80 @@
   {% endblock %}
 </head>
 
-<body>
+<body style="height:100vh;" class="d-flex flex-column justify-content-between">
   <!-- navbar -->
-  <nav class="navbar is-info">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="/" style="font-weight:bold;">Ride hailing</a>
-        <span class="navbar-burger burger" data-target="nav-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </div>
-      <div id="nav-menu" class="navbar-menu">
-        <div class="navbar-start">
-          <a href="/" class="navbar-item{% ifequal page " home.html" %} is-active{%endifequal%}">Home</a>
-          {% if user %}
-          <a href="/booking" class="navbar-item{% ifequal page " about.html" %} is-active{%endifequal%}">Ride booking</a>
-          {% endif %}
-        </div>
+  <main>
 
-        <div class="navbar-end ">
-          {% if user %}
-          <div class="row align-items-center">
-            <span>{{user.first_name}} {{user.last_name}}</span>
-            <a href="/logout" class="btn btn-danger shadow">Logout</a>
+    <nav style="top:0;z-index:10" class="navbar navbar-expand-sm position-sticky navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="/">Ride Hailing</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="collapsibleNavId">
+
+          <ul class="navbar-nav">
+            {% if user %}
+            <li class="nav-item">
+              {% ifequal user.role "driver" %}
+              <a href="/dashboard"
+                class='nav-link text-white {% ifequal page "dashboard.html" %}active{%endifequal%}'>Dashboard</a>
+              {%else%}
+              <a href="/order"
+                class="nav-link text-white {% ifequal page 'about.html' %}active{%endifequal%}">Order</a>
+              {% endifequal %}
+
+
+
+            </li>
+
+            {% endif %}
+
+
+          </ul>
+
+          <div>
+            {% if user %}
+            <div class="d-flex bg-white rounded p-1 align-items-center justify-content-between" style="gap:.3rem">
+              <div class="d-flex flex-column">
+                <small style="font-size: x-small;">{{user.first_name}} {{user.last_name}}</small>
+                <small style="font-size: smaller;">{{user.email}}</small>
+              </div>
+              <a href="/logout" class="btn btn-sm btn-danger">Logout</a>
+            </div>
+            {%else%}
+            <a href="/login"
+              class="btn btn-link text-light {% ifequal page 'login.html' %} is-active{%endifequal%}">Login</a>
+            {% endif %}
           </div>
-          {%else%}
-          <a href="/login" class="navbar-item{% ifequal page " login.html" %} is-active{%endifequal%}">Login</a>
-          {% endif %}
 
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
 
-  <div class="container">
-    <section class="section">
+
+    <div class="container">
       <div class="container">
         {% block page %}
         {% endblock %}
       </div>
-    </section>
 
-    <!-- scripts -->
-    <script type="text/javascript">
-      (function () {
-        var burger = document.querySelector('.burger');
-        var nav = document.querySelector('#' + burger.dataset.target);
-        burger.addEventListener('click', function () {
-          burger.classList.toggle('is-active');
-          nav.classList.toggle('is-active');
-        });
-      })();
-    </script>
+  </main>
 
 
-    {% block page-scripts %}
-    {% endblock %}
-
-
-    <footer>
-      <p class="p-3">Copyright &copy; Ride Hailing Co. {{now}}</p>
-    </footer>
+  <footer>
+    <p class="p-3">Copyright &copy; Ride Hailing Co. {{now}}</p>
+  </footer>
   </div>
+
+
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+  {% block page_scripts %}
+  {% endblock %}
 
 </body>
 
