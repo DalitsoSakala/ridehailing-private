@@ -55,4 +55,6 @@ CREATE TABLE if not exists `vehicle` (
 
 (defn get-vehicle [id]
   (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE id=?" id] :row-fn utils/db-record))
+(defn get-vehicle-by-driver [id]
+  (first (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE driver=?" id] :row-fn utils/db-record)))
 

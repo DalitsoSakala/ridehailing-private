@@ -2,7 +2,7 @@
   (:require
    [ride-hailing.layout :as layout]
    [clojure.java.io :as io]
-   [ride-hailing.middleware :refer [with-auth handle-vehicle-addition]]
+   [ride-hailing.middleware :as middleware]
    [ring.util.response]
    [ride_hailing.models.user :as userdb]
    [ring.util.response]
@@ -24,7 +24,7 @@
 
 
 (defn add-vehicle [_]
-  (ring.util.response/redirect "/"))
+  (ring.util.response/redirect "/dashboard"))
 
 
 
@@ -38,10 +38,10 @@
 
    ["/" {:get home-view}]
 
-   ["/dashboard" {:get (with-auth driver-view)}]
+   ["/dashboard" {:get (middleware/with-auth driver-view)}]
 
-   ["/order" {:get (with-auth customer-view)}]
-   ["/add-vehicle" {:post (with-auth (handle-vehicle-addition add-vehicle))}]
+   ["/order" {:get (middleware/with-auth customer-view)}]
+   ["/add-vehicle" {:post (middleware/with-auth (middleware/handle-vehicle-addition add-vehicle))}]
    ;
    ]
   ;
