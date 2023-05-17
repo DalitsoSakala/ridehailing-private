@@ -5,6 +5,19 @@
 <form method="POST" action="/signup" class="box">
     {% csrf-field %}
     <div>
+        <div class="d-flex align-items-center mb-2 justify-content-end">
+            <span>Register as:&nbsp;</span>
+            <small>
+                <label>
+                    Customer
+                    <input checked type="radio" name="role" value="customer">
+                </label>
+                <label>
+                    Driver
+                    <input type="radio" name="role" value="driver">
+                </label>
+            </small>
+        </div>
         <div>
             <div class="inputBox">
                 <input name="first_name" required value="">
@@ -26,7 +39,7 @@
                 <label>Password</label>
             </div>
 
-            
+
 
             <div class="d-flex flex-row justify-content-between align-items-center">
                 <a href="/login" class="btn bn-link">Login</a>
