@@ -5,7 +5,7 @@
 {% endblock css %}
 
 {% block page %}
-
+{% if vehicle %}
 <div id="box">
     <div>
         <p id="prompt">Hey, a customer wants to ride with you.</p>
@@ -33,4 +33,45 @@
         <button id="acceptButton">ACCEPT</button>
     </div>
 </div>
+
+{%else%}
+<div class="container">
+    <h4 class="text-center mt-5">Add your vehicle details</h4>
+    <form action="/add-vehicle" method="post" style="width:90%;max-width:380px;gap:2rem"
+        class="mx-auto mt-4 mt-4 p-4 py-2 d-flex flex-column">
+        {% csrf-field %}
+        <input type="hidden" name="driver" value="{{user.id}}">
+        
+        <label>Plate No.:
+            <div class="form-group">
+                <input name="number_plate" type="text" class="form-control form-control-sm" required>
+            </div>
+        </label>
+        <label>Model:
+            <div class="form-group">
+                <input name="model" type="text" class="form-control form-control-sm" required>
+            </div>
+        </label>
+        <label>Color
+            <div class="form-group">
+                <input type="text" name="color" class="form-control form-control-sm" required>
+            </div>
+        </label>
+
+        <div class="my-3">
+            <label>Vehicle type
+
+                <select name="type" required class="form-select">
+                    <option value="">Pick an option</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Salon">Salon</option>
+                </select>
+            </label>
+        </div>
+        <div class="py-3"><input type="submit" value="Add Vehicle" class="btn btn-primary"></div>
+    </form>
+</div>
+{% endif %}
+
 {% endblock page %}
