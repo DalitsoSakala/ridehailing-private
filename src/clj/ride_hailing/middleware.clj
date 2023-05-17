@@ -8,6 +8,7 @@
    [muuntaja.middleware :refer [wrap-format wrap-params]]
    [ring.util.response :as response]
    [ride_hailing.models.user :as userdb]
+   [ride_hailing.models.vehicle :as vehicledb]
    [ride-hailing.config :refer [env]]
    [ring.middleware.session :as session]
    [ring.middleware.session.memory :as store]
@@ -82,13 +83,18 @@
 ;;       ;; moer  
 ;;     ))
 
+
+
 (defn handle-login [handler]
   (fn [{:keys [params] :as request}]
     ;; Perform actions before the request is handled
     ;; (println "Before handling request...")
     (let
      [user (userdb/get-user-by-email (:email params))
-      session (if  (= (:password user) (:password params)) (assoc (:session request) :user user)  (:session request))
+      authenticated (= (:password user) (:password params))
+      session (if  authenticated (assoc (:session request) :user user)  (:session request))
+      vehicle (if (and (= (:role user) "driver") authenticated)  (vehicledb/get-vehicle-by-driver (:id user)) nil)
+      session (if  vehicle (assoc session :vehicle vehicle)  session)
       ;
       ]
       ;; (handler request)
@@ -128,6 +134,24 @@
   ;;
 
     (handler request)))
+
+(defn handle-vehicle-addition [handler]
+  (fn [request]
+
+    (let [params (:params request)]
+      (vehicledb/insert-vehicle params))
+  ;;
+    (let [response (handler request)
+          session (:session request)
+          user (:user session)
+          vehicle (if (= (:role user) "driver") (vehicledb/get-vehicle-by-driver (:id user)) nil)
+          response (assoc response :session (assoc session :vehicle vehicle))
+          ]
+      
+      ;; Perform actions after the request is handled
+      ;; Add headers to the response , e.t.c
+      ;; (println "After handling request...")
+      response)))
 
 (defn hide-if-auth [handler]
   (fn [request]

@@ -24,10 +24,12 @@
         
 CREATE TABLE if not exists `vehicle` (
    id int not null primary key auto_increment,
-  `name` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
   `color` varchar(100) NOT NULL,
   `number_plate` varchar(100) NOT NULL,
-  `brand` varchar(100) NOT NULL
+  `type` varchar(20) not null,
+  `driver` int not null,
+  foreign key (driver) references user(id)
 );
         "))
 
@@ -53,4 +55,6 @@ CREATE TABLE if not exists `vehicle` (
 
 (defn get-vehicle [id]
   (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE id=?" id] :row-fn utils/db-record))
+(defn get-vehicle-by-driver [id]
+  (first (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE driver=?" id] :row-fn utils/db-record)))
 

@@ -5,32 +5,60 @@
 {% endblock css %}
 
 {% block page %}
-
-<div id="box">
-    <div>
-        <p id="prompt">Hey, a customer wants to ride with you.</p>
+{% if vehicle %}
+<div class="row g-0 mt-4">
+    <div class="col-12 col-sm-5 col-md-4 col-lg-3 d-flex flex-column">
+        <h4 class="p-3 bg-primary text-light rounded">My vehicle</h4>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Plate</span>
+                <strong>{{vehicle.number_plate}}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Color</span>
+                <strong>{{vehicle.color}}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Model</span>
+                <strong>{{vehicle.model}}</strong>
+            </li>
+        </ul>
     </div>
 
-    <div id="details">
-        <i id="profile" class="fa fa-user fa-5x"></i>
-        <h1 id="name">Name</h1>
-        <div>
-            <h1 id="price">K57.00</h1>
-            <h1 id="distance">2.3km</h1>
+    <div class="col">
+
+        <div id="box">
+            <div>
+                <p id="prompt">Hey, a customer wants to ride with you.</p>
+            </div>
+
+            <div id="details">
+                <i id="profile" class="fa fa-user fa-5x"></i>
+                <h1 id="name">Name</h1>
+                <div>
+                    <h1 id="price">K57.00</h1>
+                    <h1 id="distance">2.3km</h1>
+                </div>
+            </div>
+
+            <div id="locationDetails">
+                <i id="start-location" class="fa fa-circle"> Pickup location</i>
+                <P>This is where I am</P>
+
+                <i id="destination" class="fa fa-map-marker icon fa-1x"> Drop location</i>
+                <p>This is where I want to go.</p>
+            </div>
+
+            <div id="Buttons">
+                <button id="declineButton">DECLINE</button>
+                <button id="acceptButton">ACCEPT</button>
+            </div>
         </div>
-    </div>
 
-    <div id="locationDetails">
-        <i id="start-location" class="fa fa-circle"> Pickup location</i>
-        <P>This is where I am</P>
-
-        <i id="destination" class="fa fa-map-marker icon fa-1x"> Drop location</i>
-        <p>This is where I want to go.</p>
-    </div>
-
-    <div id="Buttons">
-        <button id="declineButton">DECLINE</button>
-        <button id="acceptButton">ACCEPT</button>
     </div>
 </div>
+{%else%}
+{% include "partials/_add_vehicle.html" %}
+{% endif %}
+
 {% endblock page %}
