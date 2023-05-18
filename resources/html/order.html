@@ -6,29 +6,58 @@
 
 {% block page %}
 
-<div id="map">
-    <img src="./images/map.jpg" />
-</div>
+<div class="row g-0 my-4" style="gap: 2rem">
+    <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
+        <h4 class="p-3 bg-primary col-12 text-light rounded">Available vehicles</h4>
+        <ul class="list-group list-group-flush col-12">
+            {% for vehicle in vehicles %}
+            <a href="?vehicle={{vehicle.id}}"
+                class="list-group-item list-group-item-action d-flex justify-content-between">
+                <span>Model</span>
+                <div>
+                    <strong>{{vehicle.model}}</strong>
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+            </a>
+            {% endfor %}
+        </ul>
 
-<div class="orderBox">
-    <div class="words">
-        <div class="tags">
-            <h1>Price</h1>
-            <h1 id="Price">K57.00</h1>
+        <div class="card p-0 border-0">
+            <div class="card-body">
+            </div>
         </div>
+    </div>
+
+    <div class="col">
+        <div class="bg-primary text-light p-2 mb-2 rounded">
+            <h4>Selected vehicle</h4>
+        </div>
+        {% if selected_vehicle %}
+
+        <p>Driver: {{selected_vehicle_driver.first_name}} {{selected_vehicle_driver.last_name}}</p>
+        <div class="orderBox">
+            <div class="words">
+                <div class="tags">
+                    <h1>Price</h1>
+                    <h1 id="Price">K{{selected_vehicle.rate}}</h1>
+                </div>
+
+            </div>
+            <div class="inputs">
+                <div class="inputBoxes">
+                    <i id="start" class="fa fa-circle"></i>
+                    <input class="box" type="text" placeholder="Pick current location" />
+                </div>
+                <div class="inputBoxes">
+                    <i id="dest" class="fa fa-map-marker icon"></i>
+                    <input class="box" type="text" placeholder="Pick destination" />
+                </div>
+            </div>
+
+            <button id="orderButton">ORDER</button>
+        </div>
+        {% endif %}
 
     </div>
-    <div class="inputs">
-        <div class="inputBoxes">
-            <i id="start-location" class="fa fa-circle"></i>
-            <input class="box" type="text" placeholder="Pick current location" />
-        </div>
-        <div class="inputBoxes">
-            <i id="destination" class="fa fa-map-marker icon"></i>
-            <input class="box" type="text" placeholder="Pick destination" />
-        </div>
-    </div>
-
-    <button id="orderButton">ORDER</button>
 </div>
 {% endblock page %}
