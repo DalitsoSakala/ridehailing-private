@@ -145,13 +145,31 @@
           session (:session request)
           user (:user session)
           vehicle (if (= (:role user) "driver") (vehicledb/get-vehicle-by-driver (:id user)) nil)
-          response (assoc response :session (assoc session :vehicle vehicle))
-          ]
-      
+          response (assoc response :session (assoc session :vehicle vehicle))]
+
       ;; Perform actions after the request is handled
       ;; Add headers to the response , e.t.c
       ;; (println "After handling request...")
       response)))
+
+
+
+(defn attach-vehicle [handler]
+  (fn [request]
+
+    (let [session (:session request)
+          uid (:id (:user session))
+          response (handler request)
+          vehicle (vehicledb/get-vehicle-by-driver uid)
+          session (:session request)
+
+          response (assoc response :session (assoc session :vehicle vehicle))]
+
+      ;; Perform actions after the request is handled
+      ;; Add headers to the response , e.t.c
+      ;; (println "After handling request...")
+      response)))
+
 
 (defn hide-if-auth [handler]
   (fn [request]

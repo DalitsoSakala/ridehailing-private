@@ -6,10 +6,10 @@
 
 {% block page %}
 {% if vehicle %}
-<div class="row g-0 mt-4">
-    <div class="col-12 col-sm-5 col-md-4 col-lg-3 d-flex flex-column">
-        <h4 class="p-3 bg-primary text-light rounded">My vehicle</h4>
-        <ul class="list-group list-group-flush">
+<div class="row g-0 my-4" style="gap: 2rem">
+    <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
+        <h4 class="p-3 bg-primary col-12 text-light rounded">My vehicle</h4>
+        <ul class="list-group list-group-flush col-12">
             <li class="list-group-item d-flex justify-content-between">
                 <span>Plate</span>
                 <strong>{{vehicle.number_plate}}</strong>
@@ -23,11 +23,40 @@
                 <strong>{{vehicle.model}}</strong>
             </li>
         </ul>
+
+        <div class="card p-0 border-0 mt-4">
+            <div class="card-body">
+                <h4>Status</h4>
+                <hr>
+                <form method="post" action="/update-vehicle-availability" class="row g-0">
+                    <div class="col-12">
+                        {% csrf-field %}
+                        <input type="hidden" name="vehicle" value="{{vehicle.id}}">
+                        <h5 class="mb-0">Availability</h5><br>
+                        <label> unavailable&nbsp;&nbsp;
+                            <input name="availability" value="unavailable" {% ifequal vehicle.availability "unavailable"
+                                %}checked{% endifequal %} type="radio">
+                        </label>
+                        |
+                        <label>available&nbsp;<input name="availability" value="available" {% ifequal
+                                vehicle.availability "available" %}checked{% endifequal %} type="radio">
+                        </label>
+                        <h5 class="mb-0 mt-4">Rate (per kilometer)</h5><br>
+                        <label>Rate &nbsp;<input type="number" value="{{vehicle.rate}}" name="rate" min="0"></label>
+                    </div>
+
+                    <input type="submit" class="btn btn-info col-12 mt-3" value="Upate Status">
+
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="col">
-
-        <div id="box">
+        <div class="bg-primary text-light p-2 mb-2 rounded">
+            <h4>My requests</h4>
+        </div>
+        <div id="box" class="mx-auto pt-2">
             <div>
                 <p id="prompt">Hey, a customer wants to ride with you.</p>
             </div>
