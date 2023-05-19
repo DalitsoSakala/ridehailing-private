@@ -55,34 +55,24 @@
     <div class="col">
         <div class="bg-primary text-light p-2 mb-2 rounded">
             <h4>My requests</h4>
-        </div>
-        <div id="box" class="mx-auto pt-2">
-            <div>
-                <p id="prompt">Hey, a customer wants to ride with you.</p>
-            </div>
-
-            <div id="details">
-                <i id="profile" class="fa fa-user fa-5x"></i>
-                <h1 id="name">Name</h1>
-                <div>
-                    <h1 id="price">K57.00</h1>
-                    <h1 id="distance">2.3km</h1>
+            <!-- Hover added -->
+            <div class="list-group">
+                {% for o in orders %}
+                <div class="list-group-item">
+                    <form action="/accept-order" method="post" class="d-flex justify-content-between">
+                        <span>{{o.first_name}} {{o.last_name}}</span>
+                        {% csrf-field %}
+                        <input type="hidden" name="order" value="{{o.id}}">
+                        <button class="btn btn-danger">Accept</btn>
+                    </form>
                 </div>
-            </div>
-
-            <div id="locationDetails">
-                <i id="start-location" class="fa fa-circle"> Pickup location</i>
-                <P>This is where I am</P>
-
-                <i id="destination" class="fa fa-map-marker icon fa-1x"> Drop location</i>
-                <p>This is where I want to go.</p>
-            </div>
-
-            <div id="Buttons">
-                <button id="declineButton">DECLINE</button>
-                <button id="acceptButton">ACCEPT</button>
+                {%empty%}
+                <a href="#" class="list-group-item">No orders</a>
+                {% endfor %}
             </div>
         </div>
+
+
 
     </div>
 </div>

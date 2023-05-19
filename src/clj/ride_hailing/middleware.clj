@@ -9,6 +9,7 @@
    [ring.util.response :as response]
    [ride_hailing.models.user :as userdb]
    [ride_hailing.models.vehicle :as vehicledb]
+   [ride_hailing.models.rideorder :as orderdb]
    [ride-hailing.config :refer [env]]
    [ring.middleware.session :as session]
    [ring.middleware.session.memory :as store]
@@ -151,6 +152,24 @@
       ;; Add headers to the response , e.t.c
       ;; (println "After handling request...")
       response)))
+
+(defn attach-order [handler]
+  (fn [request]
+
+    (let [session (:session request)
+          user  (:user session)
+          id (:id user)
+          orders (if (= (:role user) "driver") (orderdb/get-rideorders-for-driver id) (orderdb/get-rideorder-for-customer id))
+
+          response (handler (assoc request :session (assoc session :orders orders)))
+
+
+          response (assoc response :session (assoc session :orders orders))]
+      ;; Perform actions after the request is handled
+      ;; Add headers to the response , e.t.c
+      ;; (println "After handling request...")
+      response)))
+
 
 
 
