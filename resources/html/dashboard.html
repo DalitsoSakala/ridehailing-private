@@ -28,6 +28,14 @@
             <div class="card-body">
                 <h4>Status</h4>
                 <hr>
+                {% if accepted_order %}
+                <form method="post" action="/end-ride">
+                    <h5>Currently occupied</h5>
+                    {% csrf-field %}
+                    <button class="btn-danger btn">END RIDE</button>
+                </form>
+                {%else%}
+
                 <form method="post" action="/update-vehicle-availability" class="row g-0">
                     <div class="col-12">
                         {% csrf-field %}
@@ -48,41 +56,40 @@
                     <input type="submit" class="btn btn-info col-12 mt-3" value="Upate Status">
 
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div class="col">
-        <div class="bg-primary text-light p-2 mb-2 rounded">
+        <div class="bg-{% if accepted_order %}info{%else%}primary{% endif %} text-light p-2 mb-2 rounded">
+            {% if accepted_order %}
+            <h4>My accepted order</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Name: {{accepted_order.first_name}} {{accepted_order.last_name}}</li>
+            </ul>
+            {%else%}
+
             <h4>My requests</h4>
-        </div>
-        <div id="box" class="mx-auto pt-2">
-            <div>
-                <p id="prompt">Hey, a customer wants to ride with you.</p>
-            </div>
-
-            <div id="details">
-                <i id="profile" class="fa fa-user fa-5x"></i>
-                <h1 id="name">Name</h1>
-                <div>
-                    <h1 id="price">K57.00</h1>
-                    <h1 id="distance">2.3km</h1>
+            <!-- Hover added -->
+            <div class="list-group">
+                {% for o in orders %}
+                <div class="list-group-item">
+                    <form action="/accept-order" method="post" class="d-flex justify-content-between">
+                        <span>{{o.first_name}} {{o.last_name}}</span>
+                        {% csrf-field %}
+                        <input type="hidden" name="order" value="{{o.id}}">
+                        <button class="btn btn-danger">Accept</btn>
+                    </form>
                 </div>
+                {%empty%}
+                <a href="#" class="list-group-item">No orders</a>
+                {% endfor %}
             </div>
-
-            <div id="locationDetails">
-                <i id="start-location" class="fa fa-circle"> Pickup location</i>
-                <P>This is where I am</P>
-
-                <i id="destination" class="fa fa-map-marker icon fa-1x"> Drop location</i>
-                <p>This is where I want to go.</p>
-            </div>
-
-            <div id="Buttons">
-                <button id="declineButton">DECLINE</button>
-                <button id="acceptButton">ACCEPT</button>
-            </div>
+            {% endif %}
         </div>
+
+
 
     </div>
 </div>
