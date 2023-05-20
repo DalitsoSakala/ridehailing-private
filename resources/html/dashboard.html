@@ -28,6 +28,14 @@
             <div class="card-body">
                 <h4>Status</h4>
                 <hr>
+                {% if accepted_order %}
+                <form method="post" action="/end-ride">
+                    <h5>Currently occupied</h5>
+                    {% csrf-field %}
+                    <button class="btn-danger btn">END RIDE</button>
+                </form>
+                {%else%}
+
                 <form method="post" action="/update-vehicle-availability" class="row g-0">
                     <div class="col-12">
                         {% csrf-field %}
@@ -48,12 +56,20 @@
                     <input type="submit" class="btn btn-info col-12 mt-3" value="Upate Status">
 
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div class="col">
-        <div class="bg-primary text-light p-2 mb-2 rounded">
+        <div class="bg-{% if accepted_order %}info{%else%}primary{% endif %} text-light p-2 mb-2 rounded">
+            {% if accepted_order %}
+            <h4>My accepted order</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Name: {{accepted_order.first_name}} {{accepted_order.last_name}}</li>
+            </ul>
+            {%else%}
+
             <h4>My requests</h4>
             <!-- Hover added -->
             <div class="list-group">
@@ -70,6 +86,7 @@
                 <a href="#" class="list-group-item">No orders</a>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
 
 

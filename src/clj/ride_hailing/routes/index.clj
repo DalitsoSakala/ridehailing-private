@@ -18,11 +18,34 @@
 
 
 (defn driver-view [request]
-  (let [session (:session request)]
+  (let [session (:session request)
+        driver  (:id (:user session))
+        accepted-order (orderdb/get-accepted-order-for-driver driver)]
 
     (layout/render request "dashboard.html" {:user  (:user session)
+                                             :accepted_order accepted-order
                                              :vehicle (:vehicle session)
                                              :orders (:orders session)})))
+
+(defn accept-order [request]
+  (let [session (:session request)
+        driver (:user session)
+        vehicle-id (:id (:vehicle session))
+        order-id (read-string (:order (:params request)))]
+    (vehicledb/update-vehicle-status vehicle-id {:availability "unavailable"})
+    (orderdb/update-rideorders-for-driver (:id driver) {:status "rejected"})
+    (orderdb/update-rideorder-status order-id {:status "accepted"})
+    (ring.util.response/redirect "/dashboard")))
+
+
+
+(defn end-ride [request]
+  (let [session (:session request)
+        driver-id (:id (:user session)) 
+        order-id (:id (orderdb/get-accepted-order-for-driver driver-id))]
+    (orderdb/update-rideorder-status order-id {:status "completed"}))
+  
+  (ring.util.response/redirect "/dashboard"))
 
 
 (defn customer-view [request]
@@ -45,7 +68,8 @@
         session (:session request)
         me (:id (:user session))
         existing-order (:orders session)]
-    (if existing-order (orderdb/update-rideorder-status (:id existing-order) {:status "cancelled"}) (orderdb/insert-rideorder {:driver driver :customer me})))
+    (if existing-order (orderdb/update-rideorder-status (:id existing-order) {:status "cancelled"})
+        (orderdb/insert-rideorder {:driver driver :customer me})))
   (ring.util.response/redirect "/order"))
 
 (defn add-vehicle [_]
@@ -61,6 +85,7 @@
 
 
 
+
 (defn index-routes []
   [""
    {:middleware [middleware/wrap-csrf
@@ -70,11 +95,15 @@
 
    ["/" {:get home-view}]
 
-   ["/dashboard" {:get (middleware/with-auth (middleware/attach-vehicle (middleware/attach-order driver-view)))}]
+   ["/dashboard" {:get (middleware/driver-only (middleware/attach-vehicle (middleware/attach-order driver-view)))}]
+   ["/accept-order" {:post (middleware/driver-only accept-order)}]
+   ["/end-ride" {:post (middleware/driver-only end-ride)}]
+   ["/add-vehicle" {:post (middleware/driver-only (middleware/handle-vehicle-addition add-vehicle))}]
+   ["/update-vehicle-availability" {:post (middleware/driver-only (middleware/attach-vehicle update-vehicle-status))}]
+
+
 
    ["/order" {:get (middleware/with-auth (middleware/attach-order customer-view)) :post (middleware/with-auth (middleware/attach-order make-order))}]
-   ["/add-vehicle" {:post (middleware/with-auth  (middleware/handle-vehicle-addition add-vehicle))}]
-   ["/update-vehicle-availability" {:post (middleware/with-auth (middleware/attach-vehicle update-vehicle-status))}]
    ;
    ]
   ;

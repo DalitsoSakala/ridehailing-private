@@ -72,17 +72,11 @@
       (handler request)
       (response/redirect "/login"))))
 
-;; (defn handle-login [handler]
-;;   (fn [{:keys [params] :as request}]
-;;     (let
-;;      [user (userdb/get-user-by-email (:email params))]
-;;       (update request assoc :session {})
-;;       (session/session-request request {:user user})
-;;       (handler request)
-;;       ;;
-;;       )
-;;       ;; moer  
-;;     ))
+(defn driver-only [handler]
+  (fn [request]
+    (if (= (:role (:user (:session request))) "driver")
+      (handler request)
+      (response/redirect "/"))))
 
 
 

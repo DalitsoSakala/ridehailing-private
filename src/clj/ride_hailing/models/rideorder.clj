@@ -27,7 +27,7 @@ CREATE TABLE if not exists `rideorder` (
   `driver` int not null,
   `customer` int not null,
   `date` datetime default now() not null,
-  `status` enum('rejected','accepted','cancelled','open')  default 'open' not null,
+  `status` enum('rejected','accepted','cancelled','open','completed')  default 'open' not null,
   foreign key (driver) references user(id),
   foreign key (customer) references user(id)
 );
@@ -49,6 +49,10 @@ CREATE TABLE if not exists `rideorder` (
 (defn update-rideorder-status [id data]
   (jdbc/update! db/db-settings :rideorder data ["id = ?" id]))
 
+(defn update-rideorders-for-driver [driver-id data]
+  (jdbc/update! db/db-settings :rideorder data ["driver = ?" driver-id]))
+
+
 (defn delete-rideorder [id]
   (jdbc/delete! db/db-settings :rideorder {:id id}))
 
@@ -57,6 +61,20 @@ CREATE TABLE if not exists `rideorder` (
 
 (defn get-available-rideorders []
   (jdbc/query db/db-settings ["SELECT * FROM rideorder where status='open'"] :row-fn utils/db-record))
+
+(defn get-accepted-order-for-driver [driver-id]
+  (first (jdbc/query db/db-settings [(str "
+                                    SELECT rideorder.id, u.first_name, u.last_name FROM 
+                                           (
+                                             select * from user 
+                                               where id in
+                                                 (
+                                                    select customer from rideorder
+                                                      where driver=? and status ='accepted'
+                                                ) 
+                                           ) as u
+                                          inner join rideorder on rideorder.customer=u.id;
+                                    ") driver-id] :row-fn utils/db-record)))
 
 (defn get-rideorders-for-driver [id]
   (jdbc/query db/db-settings [(str "
