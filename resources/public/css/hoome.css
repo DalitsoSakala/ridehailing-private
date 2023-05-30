@@ -1,0 +1,17 @@
+  body{
+    
+background-image: url("./taxi.jpg") ;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  text-align: center;
+    text-decoration: double;
+    text-shadow: 5px;
+    text-decoration: solid;
+}
+  h1{
+    color:hsl(208, 100%, 50%);
+    margin-top: 55px;
+    position: inherit;
+    position:center;
+  }
