@@ -14,7 +14,11 @@
 
 
 (defn home-view [request]
-  (layout/render request "home.html" {:user  (get-in request [:session :user]) :vehicle (get-in request [:session :vehicle])}))
+  (layout/render request "home.html" {
+    :user  (get-in request [:session :user])
+    :accepted_order (get-in request [:session :accepted-order])
+
+     :vehicle (get-in request [:session :vehicle])}))
 
 
 (defn driver-view [request]
@@ -53,10 +57,12 @@
         params (:params request)
         session (:session request)
         selected-vehicle  (:vehicle params)
+        user (:user session)
         selected-vehicle  (if selected-vehicle (vehicledb/get-vehicle selected-vehicle) nil)
         selected-vehicle-driver  (if selected-vehicle (userdb/get-user (:driver selected-vehicle)) nil)]
-    (layout/render request "order.html" {:user  (:user session)
+    (layout/render request "order.html" {:user  user
                                          :order  (:orders session)
+                                         :accepted_order (:accepted-order session)
                                          :vehicles vehicles
                                          :selected_vehicle selected-vehicle
                                          :selected_vehicle_driver selected-vehicle-driver})))
@@ -93,7 +99,7 @@
                 ;;  ring.middleware.session/wrap-session
                  ]}
 
-   ["/" {:get home-view}]
+   ["/" {:get  home-view}]
 
    ["/dashboard" {:get (middleware/driver-only (middleware/attach-vehicle (middleware/attach-order driver-view)))}]
    ["/accept-order" {:post (middleware/driver-only accept-order)}]
