@@ -62,6 +62,9 @@ CREATE TABLE if not exists `rideorder` (
 (defn get-available-rideorders []
   (jdbc/query db/db-settings ["SELECT * FROM rideorder where status='open'"] :row-fn utils/db-record))
 
+(defn get-accepted-order-for-customer [customer]
+  (first (jdbc/query db/db-settings ["SELECT * FROM rideorder where status='accepted' and customer=?" customer] :row-fn utils/db-record)))
+
 (defn get-accepted-order-for-driver [driver-id]
   (first (jdbc/query db/db-settings [(str "
                                     SELECT rideorder.id, u.first_name, u.last_name FROM 

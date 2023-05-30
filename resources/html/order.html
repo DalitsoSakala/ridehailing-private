@@ -5,7 +5,14 @@
 {% endblock css %}
 
 {% block page %}
-
+{% if accepted_order %}
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 80vh">
+    <div class="text-center" >
+        <p>The driver accepted your request!</p>
+        <a href="/ride" class="btn btn-lg btn-primary">Go to ride</a>
+    </div>
+</div>
+{%else%}
 <div class="row g-0 my-4" style="gap: 2rem">
     <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
         <h4 class="p-3 bg-primary col-12 text-light rounded">Available vehicles</h4>
@@ -16,7 +23,7 @@
                 <span>Model</span>
                 <div>
                     <strong>{{vehicle.model}}</strong>
-                      <i class="fa fa-arrow-right"></i>
+                    <i class="fa fa-arrow-right"></i>
                 </div>
             </a>
             {% endfor %}
@@ -57,7 +64,7 @@
             {% csrf-field %}
 
             {% if order %}
-            <button  class="btn btn-danger">CANCEL ACTIVE ORDER</button>
+            <button class="btn btn-danger">CANCEL ACTIVE ORDER</button>
             {%else%}
             <button id="orderButton">ORDER</button>
             {% endif %}
@@ -67,4 +74,5 @@
 
     </div>
 </div>
+{% endif%}
 {% endblock page %}

@@ -40,8 +40,12 @@
               <a href="/dashboard"
                 class='nav-link text-white {% ifequal page "dashboard.html" %}active{%endifequal%}'>Dashboard</a>
               {%else%}
-              <a href="/order"
-                class="nav-link text-white {% ifequal page 'about.html' %}active{%endifequal%}">Order</a>
+              {% if accepted_order %}
+
+              <a href="/ride" class="nav-link text-white {% ifequal page 'ride.html' %}active{%endifequal%}">Ride</a>
+              {%else%}
+              <a href="/order" class="nav-link text-white {% ifequal page 'order.html' %}active{%endifequal%}">Order</a>
+              {% endif %}
               {% endifequal %}
 
 

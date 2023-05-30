@@ -69,7 +69,19 @@
 (defn with-auth [handler]
   (fn [request]
     (if (:user (:session request))
-      (handler request)
+      (let 
+        [
+        user  (:user (:session request))
+          accepted_order (if (= "customer" (:role user)) (orderdb/get-accepted-order-for-customer (:id user)) nil ) 
+        session (:session request)
+        session (assoc session :accepted-order accepted_order)
+        request (assoc request :session session)
+        ]
+
+        (handler request)
+      )
+                                         
+
       (response/redirect "/login"))))
 
 (defn driver-only [handler]
