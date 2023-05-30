@@ -4,6 +4,8 @@
 {% endblock css %}
 
 
+{% block css %}
+{% endblock css %}
 {% block meta %}
 {% ifequal user.role "driver" %}
 {% if vehicle %}
@@ -15,6 +17,4 @@
 
 
 {% block page %}
-<h1>WELCOME TO RIDE HAILING</h1>
-
 {% endblock %}

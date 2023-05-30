@@ -23,10 +23,8 @@
   (str "
         CREATE TABLE if not exists location (
             id int primary key not null auto_increment,
-            x int NOT NULL,
-            y int NOT NULL,
-            city varchar(200) NOT NULL,
-            country varchar(200) NOT NULL
+            lat int NOT NULL,
+            lng int NOT NULL
         );
         "))
 
