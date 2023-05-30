@@ -3,7 +3,7 @@ body {
     vertical-align: middle;
 }
 h1 {
-    margin-top: 10%;
+    margin-top: 10px;
     margin-left: 35%;
     font-size: 50px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -21,8 +21,8 @@ h1 {
 }
 
 #car {
-    margin-top: 10%;
-    margin-bottom: 10%;
+    margin-top: 10px;
+    margin-bottom: 30px;
     text-align: center;
 }
 
@@ -65,8 +65,10 @@ h1 {
   }
 
   @media (min-width: 760px) {
+   
     .box{
       width: 400px;
+      
     }
   }
   
@@ -146,7 +148,8 @@ h1 {
   }
   
   .box input[type="submit"]:hover {
-    background-color: #287ae6;
+    background-color: #cfd4db;
+    color: #202124;
     box-shadow: 0 1px 1px 0 rgba(66,133,244,0.45), 0 1px 3px 1px rgba(66,133,244,0.3);
 }
 
@@ -164,6 +167,8 @@ h1 {
 }
 
 .box .inputBox input:focus {
+            background-color: #508cbd;
+            color: whitesmoke;
             outline: none;
             border: 2px solid #1a73e8;
 }
