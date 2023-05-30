@@ -22,9 +22,9 @@
             :user "root"
             :dbtype "mysql"
             :dbname "ridehailing"
-            :password "1234"
+            :password "159357Felix.."
             :useSSL false,
             :allowPublicKeyRetrieval true
             :port "3306"}
-;;  :database {:connection-uri "jdbc:mysql://localhost:3306/ridehailing?user=root&password=1234&useSSL=false"}
+;;  :database {:connection-uri "jdbc:mysql://localhost:3306/ridehailing?user=root&password=159357Felix..&useSSL=false"}
  }
