@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 
+{% block css %}
+{% endblock css %}
 {% block meta %}
 {% ifequal user.role "driver" %}
 {% if vehicle %}
@@ -12,4 +14,27 @@
 
 
 {% block page %}
+
+<style>
+    #home{
+        height: 80vh;
+        width: 100%;
+        background-image: url(/img/ride.jpg); background-repeat: no-repeat; background-position: center;
+
+    }
+    .container p{
+        font-weight: bold;
+        text-shadow: 0 0 .4rem .4rem lightblue;
+        font-size: 9rem;
+        color: white;
+    }
+    .container p:last-child{
+        text-align: end;
+    }
+  </style>
+
+  <div id="home">
+    <p>Ride hailing.</p>
+    <p>Catch the ride!</p>
+  </div>
 {% endblock %}
