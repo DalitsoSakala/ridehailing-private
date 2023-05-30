@@ -12,7 +12,7 @@
 
 
 (defn picker-view [request]
-  (layout/render request "ride/picker.html" {:user  (get-in request [:session :user])
+  (layout/render request "ride.html" {:user  (get-in request [:session :user])
   
   :accepted_order  (get-in request [:session :accepted-order])}))
 
@@ -26,5 +26,5 @@
                  middleware/wrap-formats
                  ]}
 
-   ["/ride" {:get  (middleware/with-auth picker-view)}]])
+   ["/ride-olddeleted" {:get  (middleware/with-auth picker-view)}]])
 

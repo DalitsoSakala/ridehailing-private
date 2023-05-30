@@ -27,16 +27,13 @@ CREATE TABLE if not exists `ride` (
    vehicle int not null,
    driver int not null ,
    customer int NOT NULL ,
-   destination int NOT NULL ,
-   origin int NOT NULL ,
+   order int NOT NULL ,
   `price` decimal NOT NULL,
-  `duration` time NOT NULL,
   `date` datetime default now() NOT NULL,
    foreign key (vehicle) references vehicle(id),
    foreign key (driver) references user(id),
    foreign key (customer) references user(id),
-   foreign key (origin) references location(id),
-   foreign key (destination) references location(id)
+   foreign key (order) references rideorder(id)
 );
         "))
 
