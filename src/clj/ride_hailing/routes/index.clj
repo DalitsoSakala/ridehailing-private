@@ -6,6 +6,8 @@
    [ring.util.response]
    [ride_hailing.models.user :as userdb]
    [ride_hailing.models.rideorder :as orderdb]
+   [ride_hailing.models.ride :as ridedb]
+   [ride_hailing.models.location :as locdb]
    [ring.util.response]
    [ring.middleware.session]
    [ring.util.http-response :as response]
@@ -35,13 +37,20 @@
   (let [session (:session request)
         driver (:user session)
         vehicle-id (:id (:vehicle session))
-        order-id (read-string (:order (:params request)))]
+        order-id (read-string (:order (:params request)))
+        order (orderdb/get-rideorder order-id)]
     (vehicledb/update-vehicle-status vehicle-id {:availability "unavailable"})
     (orderdb/update-rideorders-for-driver (:id driver) {:status "rejected"})
     (orderdb/update-rideorder-status order-id {:status "accepted"})
+    (ridedb/insert-ride {:vehicle vehicle-id :driver (:id driver) :customer (:customer order) :price (:rate (:vehicle session)) :order (:id order) })
     (ring.util.response/redirect "/dashboard")))
 
 
+
+(defn ride-view [request]
+  (layout/render request "ride.html" {:user  (get-in request [:session :user])
+
+                                      :accepted_order  (get-in request [:session :accepted-order])}))
 
 (defn end-ride [request]
   (let [session (:session request)
@@ -71,11 +80,15 @@
 (defn make-order [request]
   (let [params (:params request)
         driver (read-string (:driver params))
+        lat1 (read-string (:ori-lat params))
+        lat2 (read-string (:dest-lat params))
+        lng1 (read-string (:ori-lng params))
+        lng2 (read-string (:dest-lng params))
         session (:session request)
         me (:id (:user session))
         existing-order (:orders session)]
     (if existing-order (orderdb/update-rideorder-status (:id existing-order) {:status "cancelled"})
-        (orderdb/insert-rideorder {:driver driver :customer me})))
+        (orderdb/insert-rideorder {:driver driver :customer me :lat1 lat1  :lat2 lat2  :lng1 lng1  :lng2 lng2})))
   (ring.util.response/redirect "/order"))
 
 (defn add-vehicle [_]
@@ -110,6 +123,7 @@
 
 
    ["/order" {:get (middleware/with-auth (middleware/attach-order customer-view)) :post (middleware/with-auth (middleware/attach-order make-order))}]
+   ["/ride" {:get (middleware/with-auth ride-view)}]
    ;
    ]
   ;

@@ -7,7 +7,7 @@
 {% block page %}
 {% if accepted_order %}
 <div class="d-flex flex-column justify-content-center align-items-center" style="height: 80vh">
-    <div class="text-center" >
+    <div class="text-center">
         <p>The driver accepted your request!</p>
         <a href="/ride" class="btn btn-lg btn-primary">Go to ride</a>
     </div>
@@ -49,17 +49,22 @@
                 </div>
 
             </div>
+            {% if order %}
+            {%else%}
             <div class="inputs">
                 <div class="inputBoxes">
                     <i id="start" class="fa fa-circle"></i>
-                    <input class="box" type="text" placeholder="Pick current location" />
+                    <input class="box" name="ori-lat" type="text" placeholder="Pick current location latitude" />
+                    <input class="box" name="ori-lng" type="text" placeholder="Pick current location longitude" />
                 </div>
                 <div class="inputBoxes">
                     <i id="dest" class="fa fa-map-marker icon"></i>
-                    <input class="box" type="text" placeholder="Pick destination" />
+                    <input class="box" name="dest-lat" type="text" placeholder="Pick destination location latitude" />
+                    <input class="box" name="dest-lng" type="text" placeholder="Pick destination location longitude" />
                 </div>
             </div>
 
+            {% endif %}
             <input type="hidden" name="driver" value="{{selected_vehicle_driver.id}}">
             {% csrf-field %}
 

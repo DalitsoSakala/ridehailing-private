@@ -71,8 +71,9 @@
     (if (:user (:session request))
       (let 
         [
-        user  (:user (:session request))
-          accepted_order (if (= "customer" (:role user)) (orderdb/get-accepted-order-for-customer (:id user)) nil ) 
+        user  (:user (:session request)) 
+         accepted_order (if (= "customer" (:role user)) 
+                          (orderdb/get-accepted-order-for-customer (:id user)) nil ) 
         session (:session request)
         session (assoc session :accepted-order accepted_order)
         request (assoc request :session session)

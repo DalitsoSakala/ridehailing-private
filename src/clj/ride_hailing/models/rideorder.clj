@@ -28,6 +28,11 @@ CREATE TABLE if not exists `rideorder` (
   `customer` int not null,
   `date` datetime default now() not null,
   `status` enum('rejected','accepted','cancelled','open','completed')  default 'open' not null,
+  lat1 int,
+  lat2 int,
+  lng1 int,
+  lng2 int,
+        
   foreign key (driver) references user(id),
   foreign key (customer) references user(id)
 );
