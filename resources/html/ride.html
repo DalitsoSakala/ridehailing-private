@@ -24,7 +24,6 @@
 {% endblock css %}
 
 {% block page %}
-
 <div id="map"></div>
 
 <!-- prettier-ignore -->
@@ -40,21 +39,47 @@
 
 <script>
   let map;
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      initMap(position.coords.latitude, position.coords.longitude)
-    },
-    function errorCallback(error) {
-      console.log(error)
-    }
-  );
-  async function initMap(lat, lng) {
-    const latlng = { lat, lng }
+  let m1={
+    lat: {{accepted_order.lat1}},
+    lng: {{accepted_order.lng1}}
+  }
+  let m2={
+    lat: {{accepted_order.lat2}},
+    lng: {{accepted_order.lng2}}
+  }
+  if (false)
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        initMap(position.coords.latitude, position.coords.longitude)
+      },
+      function errorCallback(error) {
+        console.log(error)
+      }
+    );
+  else initMap(-15.3923, 28.3285)
+  async function initMap() {
+    console.log(m1,m2)
     const { Map } = await google.maps.importLibrary("maps");
     map = new Map(document.getElementById("map"), {
-      center: latlng,
-      zoom: 8,
+      center: m1,
+      zoom: 16,
     });
+    new google.maps.Marker({
+      position: m1,
+      map: map
+    });
+    new google.maps.Marker({
+      position: m2,
+      map: map
+    });
+    // map.addListener('click', function (e) {
+    //   console.log(e.latLng)
+    //   new google.maps.Marker({
+    //     position: {lat:e.latLng.lat(),lng:e.latLng.lng()},
+    //     map: map,
+    //     draggable:true
+    //   });
+    // });
   }
   // initMap();
 </script>
