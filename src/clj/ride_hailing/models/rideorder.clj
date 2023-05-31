@@ -28,10 +28,10 @@ CREATE TABLE if not exists `rideorder` (
   `customer` int not null,
   `date` datetime default now() not null,
   `status` enum('rejected','accepted','cancelled','open','completed')  default 'open' not null,
-  lat1 int,
-  lat2 int,
-  lng1 int,
-  lng2 int,
+  lat1 double,
+  lat2 double,
+  lng1 double,
+  lng2 double,
         
   foreign key (driver) references user(id),
   foreign key (customer) references user(id)
@@ -72,7 +72,7 @@ CREATE TABLE if not exists `rideorder` (
 
 (defn get-accepted-order-for-driver [driver-id]
   (first (jdbc/query db/db-settings [(str "
-                                    SELECT rideorder.id, u.first_name, u.last_name FROM 
+                                    SELECT rideorder.id, u.first_name, u.last_name, rideorder.lat1,rideorder.lat2, rideorder.lng1, rideorder.lng2 FROM 
                                            (
                                              select * from user 
                                                where id in
@@ -81,7 +81,7 @@ CREATE TABLE if not exists `rideorder` (
                                                       where driver=? and status ='accepted'
                                                 ) 
                                            ) as u
-                                          inner join rideorder on rideorder.customer=u.id;
+                                          inner join rideorder on rideorder.customer=u.id and rideorder.status='accepted';
                                     ") driver-id] :row-fn utils/db-record)))
 
 (defn get-rideorders-for-driver [id]

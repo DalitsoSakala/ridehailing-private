@@ -42,7 +42,7 @@
     (vehicledb/update-vehicle-status vehicle-id {:availability "unavailable"})
     (orderdb/update-rideorders-for-driver (:id driver) {:status "rejected"})
     (orderdb/update-rideorder-status order-id {:status "accepted"})
-    (ridedb/insert-ride {:vehicle vehicle-id :driver (:id driver) :customer (:customer order) :price (:rate (:vehicle session)) :order (:id order) })
+    (ridedb/insert-ride {:vehicle vehicle-id :driver (:id driver) :customer (:customer order) :price (:rate (:vehicle session)) :rideorder (:id order) })
     (ring.util.response/redirect "/dashboard")))
 
 
@@ -54,6 +54,7 @@
 
 (defn end-ride [request]
   (let [session (:session request)
+        order (read-string (:ride (:params request)))
         driver-id (:id (:user session)) 
         order-id (:id (orderdb/get-accepted-order-for-driver driver-id))]
     (orderdb/update-rideorder-status order-id {:status "completed"}))
@@ -79,6 +80,7 @@
 
 (defn make-order [request]
   (let [params (:params request)
+        a (println params)
         driver (read-string (:driver params))
         lat1 (read-string (:ori-lat params))
         lat2 (read-string (:dest-lat params))

@@ -41,7 +41,7 @@
         </div>
         {% if selected_vehicle %}
         <p>Driver: {{selected_vehicle_driver.first_name}} {{selected_vehicle_driver.last_name}}</p>
-        <form class="orderBox" method="post" action="/order">
+        <form  class="orderBox w-100 d-block" method="post" action="/order">
             <div class="words">
                 <div class="tags">
                     <h1>Price</h1>
@@ -51,16 +51,17 @@
             </div>
             {% if order %}
             {%else%}
-            <div class="inputs">
+            <div id="map" style="height:500px;width:100%"></div>
+            <div class="inputs d-none">
                 <div class="inputBoxes">
                     <i id="start" class="fa fa-circle"></i>
-                    <input class="box" name="ori-lat" type="text" placeholder="Pick current location latitude" />
-                    <input class="box" name="ori-lng" type="text" placeholder="Pick current location longitude" />
+                    <input required class="box" name="ori-lat" type="text" placeholder="Pick current location latitude" />
+                    <input required class="box" name="ori-lng" type="text" placeholder="Pick current location longitude" />
                 </div>
                 <div class="inputBoxes">
                     <i id="dest" class="fa fa-map-marker icon"></i>
-                    <input class="box" name="dest-lat" type="text" placeholder="Pick destination location latitude" />
-                    <input class="box" name="dest-lng" type="text" placeholder="Pick destination location longitude" />
+                    <input required class="box" name="dest-lat" type="text" placeholder="Pick destination location latitude" />
+                    <input required class="box" name="dest-lng" type="text" placeholder="Pick destination location longitude" />
                 </div>
             </div>
 
@@ -81,3 +82,74 @@
 </div>
 {% endif%}
 {% endblock page %}
+
+
+
+{% block page_scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+        ({ key: "AIzaSyDpmDjM5CohPpVijgBNtX1vW5dDzkH1uwI", v: "weekly" });</script>
+
+<script>
+    let map;
+    let m1 = {
+        lat: -15.3923,
+    lng: 28.3285,
+}
+    let m2={...m1,lng:m1.lng+.004}
+    if (false)
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                initMap(position.coords.latitude, position.coords.longitude)
+            },
+            function errorCallback(error) {
+                console.log(error)
+            }
+        );
+    else initMap(-15.3923, 28.3285)
+    async function initMap() {
+        const { Map } = await google.maps.importLibrary("maps");
+        map = new Map(document.getElementById("map"), {
+            center: m1,
+            zoom: 16,
+            draggable:true
+        });
+         var o= new google.maps.Marker({
+            position: m1,
+            map: map,
+            label:{text:'My position',color: 'white'},
+            draggable:true
+          });
+          
+         var d= new google.maps.Marker({
+            position: m2,
+            label:{text:'My Destination',color: 'white'},
+            map: map,
+            draggable:true
+          });
+
+          google.maps.event.addListener(d, 'dragend', function() {
+            var {lat,lng}=d.getPosition()
+            m2={lat:lat(),lng:lng()}
+        });
+        google.maps.event.addListener(o, 'dragend', function() {
+            var {lat,lng}=o.getPosition()
+            m1={lat:lat(),lng:lng()}
+        });
+    }
+
+    $('#orderButton').on('click',function(){
+        console.log('submitting')
+        let f=$('form')
+        f.find('[name=ori-lat]').val(m1.lat)
+        f.find('[name=ori-lng]').val(m1.lng)
+
+        
+        f.find('[name=dest-lat]').val(m2.lat)
+        f.find('[name=dest-lng]').val(m2.lng)
+        return true
+    })
+// initMap();
+</script>
+{% endblock page_scripts %}

@@ -1,7 +1,7 @@
 (ns ride_hailing.models.init
   (:require [ride_hailing.models.user :as userdb])
   (:require [ride_hailing.models.location :as locdb])
-  (:require [ride_hailing.models.rideorder :as ridedb])
+  (:require [ride_hailing.models.ride :as ridedb])
   (:require [ride_hailing.models.rideorder :as orderdb])
   (:require [ride_hailing.models.vehicle :as vehicledb])
   ;
@@ -14,9 +14,9 @@
   (locdb/create-table)
   (println "Checking vehicle table ...")
   (vehicledb/create-table)
-  (println "Checking ride table ...")
-  (ridedb/create-table)
   (println "Checking order table ...")
   (orderdb/create-table)
+  (println "Checking ride table ...")
+(ridedb/create-table)
   ;
   )

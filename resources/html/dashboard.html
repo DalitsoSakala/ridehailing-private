@@ -2,6 +2,11 @@
 
 {% block css %}
 {%style "/css/driverView.css" %}
+<style>
+    #map{
+        height: 500px;
+    }
+</style>
 {% endblock css %}
 
 {% block page %}
@@ -32,6 +37,7 @@
                 <form method="post" action="/end-ride">
                     <h5>Currently occupied</h5>
                     {% csrf-field %}
+                    <input type="hidden" value="{{accepted_order.id}}" name="ride">
                     <button class="btn-danger btn">END RIDE</button>
                 </form>
                 {%else%}
@@ -68,6 +74,9 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Name: {{accepted_order.first_name}} {{accepted_order.last_name}}</li>
             </ul>
+
+            <div id="map"></div>
+
             {%else%}
 
             <h4>My requests</h4>
@@ -98,3 +107,61 @@
 {% endif %}
 
 {% endblock page %}
+
+
+
+{% block page_scripts %}
+{% if accepted_order %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+        ({ key: "AIzaSyDpmDjM5CohPpVijgBNtX1vW5dDzkH1uwI", v: "weekly" });</script>
+
+<script>
+    let map;
+    let m1 = {
+        lat: {{accepted_order.lat1}},
+    lng: {{ accepted_order.lng1}},
+}
+    let m2 = {
+        lat: {{accepted_order.lat2}},
+    lng: {{accepted_order.lng2}},
+}
+    if (false)
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                initMap(position.coords.latitude, position.coords.longitude)
+            },
+            function errorCallback(error) {
+                console.log(error)
+            }
+        );
+    else initMap(-15.3923, 28.3285)
+    async function initMap() {
+        console.log(m1, m2)
+        const { Map } = await google.maps.importLibrary("maps");
+        map = new Map(document.getElementById("map"), {
+            center: m1,
+            zoom: 16,
+        });
+        new google.maps.Marker({
+            position: m1,
+            map: map
+        });
+        new google.maps.Marker({
+            position: m2,
+            map: map
+        });
+        // map.addListener('click', function (e) {
+        //   console.log(e.latLng)
+        //   new google.maps.Marker({
+        //     position: {lat:e.latLng.lat(),lng:e.latLng.lng()},
+        //     map: map,
+        //     draggable:true
+        //   });
+        // });
+    }
+// initMap();
+</script>
+{% endif %}
+{% endblock page_scripts %}
