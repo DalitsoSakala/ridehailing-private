@@ -5,7 +5,14 @@
 {% endblock css %}
 
 {% block page %}
-
+{% if accepted_order %}
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 80vh">
+    <div class="text-center">
+        <p>The driver accepted your request!</p>
+        <a href="/ride" class="btn btn-lg btn-primary">Go to ride</a>
+    </div>
+</div>
+{%else%}
 <div class="row g-0 my-4" style="gap: 2rem">
     <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
         <h4 class="p-3 bg-primary col-12 text-light rounded">Available vehicles</h4>
@@ -33,9 +40,8 @@
             <h4>Selected vehicle</h4>
         </div>
         {% if selected_vehicle %}
-
         <p>Driver: {{selected_vehicle_driver.first_name}} {{selected_vehicle_driver.last_name}}</p>
-        <div class="orderBox">
+        <form class="orderBox" method="post" action="/order">
             <div class="words">
                 <div class="tags">
                     <h1>Price</h1>
@@ -43,21 +49,35 @@
                 </div>
 
             </div>
+            {% if order %}
+            {%else%}
             <div class="inputs">
                 <div class="inputBoxes">
                     <i id="start" class="fa fa-circle"></i>
-                    <input class="box" type="text" placeholder="Pick current location" />
+                    <input class="box" name="ori-lat" type="text" placeholder="Pick current location latitude" />
+                    <input class="box" name="ori-lng" type="text" placeholder="Pick current location longitude" />
                 </div>
                 <div class="inputBoxes">
                     <i id="dest" class="fa fa-map-marker icon"></i>
-                    <input class="box" type="text" placeholder="Pick destination" />
+                    <input class="box" name="dest-lat" type="text" placeholder="Pick destination location latitude" />
+                    <input class="box" name="dest-lng" type="text" placeholder="Pick destination location longitude" />
                 </div>
             </div>
 
+            {% endif %}
+            <input type="hidden" name="driver" value="{{selected_vehicle_driver.id}}">
+            {% csrf-field %}
+
+            {% if order %}
+            <button class="btn btn-danger">CANCEL ACTIVE ORDER</button>
+            {%else%}
             <button id="orderButton">ORDER</button>
-        </div>
+            {% endif %}
+
+        </form>
         {% endif %}
 
     </div>
 </div>
+{% endif%}
 {% endblock page %}
