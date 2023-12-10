@@ -24,10 +24,14 @@
         
 CREATE TABLE if not exists `vehicle` (
    id int not null primary key auto_increment,
-  `name` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
   `color` varchar(100) NOT NULL,
   `number_plate` varchar(100) NOT NULL,
-  `brand` varchar(100) NOT NULL
+  `type` varchar(20) not null,
+  `driver` int not null,
+  `rate` decimal default 0.0 not null,
+  `availability` enum('available','unavailable') default 'unavailable' not null,
+  foreign key (driver) references user(id)
 );
         "))
 
@@ -45,12 +49,18 @@ CREATE TABLE if not exists `vehicle` (
 
     (jdbc/insert! db/db-settings :vehicle vehicle)))
 
-(defn update-vehicle [vehicle]
-  (jdbc/update! db/db-settings :vehicle {:id (:id vehicle)} vehicle))
+(defn update-vehicle-status [id data]
+  (jdbc/update! db/db-settings :vehicle data ["id = ?" id]))
 
 (defn delete-vehicle [id]
   (jdbc/delete! db/db-settings :vehicle {:id id}))
 
 (defn get-vehicle [id]
-  (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE id=?" id] :row-fn utils/db-record))
+  (first (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE id=?" id] :row-fn utils/db-record)))
+
+(defn get-available-vehicles []
+  (jdbc/query db/db-settings ["SELECT * FROM vehicle where availability='available'"] :row-fn utils/db-record))
+
+(defn get-vehicle-by-driver [id]
+  (first (jdbc/query db/db-settings ["SELECT * FROM vehicle WHERE driver=?" id] :row-fn utils/db-record)))
 

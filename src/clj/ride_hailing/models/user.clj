@@ -53,7 +53,7 @@
   (jdbc/delete! db/db-settings :user {:id id}))
 
 (defn get-user [id]
-  (jdbc/query db/db-settings ["SELECT * FROM user WHERE id=?" id] :row-fn utils/db-record))
+  (first (jdbc/query db/db-settings ["SELECT * FROM user WHERE id=?" id] :row-fn utils/db-record)))
 
 (defn get-user-by-email [email]
   (first (jdbc/query db/db-settings ["SELECT * FROM user WHERE email=? LIMIT 1" email] :row-fn utils/db-record)))

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block css %}
+{%style "/css/driverView.css" %}
+<style>
+    #map{
+        height: 500px;
+    }
+</style>
+{% endblock css %}
+
+{% block page %}
+{% if vehicle %}
+<div class="row g-0 my-4" style="gap: 2rem">
+    <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
+        <h4 class="p-3 bg-primary col-12 text-light rounded">My vehicle</h4>
+        <ul class="list-group list-group-flush col-12">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Plate</span>
+                <strong>{{vehicle.number_plate}}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Color</span>
+                <strong>{{vehicle.color}}</strong>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Model</span>
+                <strong>{{vehicle.model}}</strong>
+            </li>
+        </ul>
+
+        <div class="card p-0 border-0 mt-4">
+            <div class="card-body">
+                <h4>Status</h4>
+                <hr>
+                {% if accepted_order %}
+                <form method="post" action="/end-ride">
+                    <h5>Currently occupied</h5>
+                    {% csrf-field %}
+                    <input type="hidden" value="{{accepted_order.id}}" name="ride">
+                    <button class="btn-danger btn">END RIDE</button>
+                </form>
+                {%else%}
+
+                <form method="post" action="/update-vehicle-availability" class="row g-0">
+                    <div class="col-12">
+                        {% csrf-field %}
+                        <input type="hidden" name="vehicle" value="{{vehicle.id}}">
+                        <h5 class="mb-0">Availability</h5><br>
+                        <label> unavailable&nbsp;&nbsp;
+                            <input name="availability" value="unavailable" {% ifequal vehicle.availability "unavailable"
+                                %}checked{% endifequal %} type="radio">
+                        </label>
+                        |
+                        <label>available&nbsp;<input name="availability" value="available" {% ifequal
+                                vehicle.availability "available" %}checked{% endifequal %} type="radio">
+                        </label>
+                        <h5 class="mb-0 mt-4">Rate (per kilometer)</h5><br>
+                        <label>Rate &nbsp;<input type="number" value="{{vehicle.rate}}" name="rate" min="0"></label>
+                    </div>
+
+                    <input type="submit" class="btn btn-info col-12 mt-3" value="Upate Status">
+
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="bg-{% if accepted_order %}info{%else%}primary{% endif %} text-light p-2 mb-2 rounded">
+            {% if accepted_order %}
+            <h4>My accepted order</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Name: {{accepted_order.first_name}} {{accepted_order.last_name}}</li>
+            </ul>
+
+            <div id="map"></div>
+
+            {%else%}
+
+            <h4>My requests</h4>
+            <!-- Hover added -->
+            <div class="list-group">
+                {% for o in orders %}
+                <div class="list-group-item">
+                    <form action="/accept-order" method="post" class="d-flex justify-content-between">
+                        <span>{{o.first_name}} {{o.last_name}}</span>
+                        {% csrf-field %}
+                        <input type="hidden" name="order" value="{{o.id}}">
+                        <button class="btn btn-danger">Accept</btn>
+                    </form>
+                </div>
+                {%empty%}
+                <a href="#" class="list-group-item">No orders</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+
+
+    </div>
+</div>
+{%else%}
+{% include "partials/_add_vehicle.html" %}
+{% endif %}
+
+{% endblock page %}
+
+
+
+{% block page_scripts %}
+{% if accepted_order %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+        ({ key: "AIzaSyDpmDjM5CohPpVijgBNtX1vW5dDzkH1uwI", v: "weekly" });</script>
+
+<script>
+    let map;
+    let m1 = {
+        lat: {{accepted_order.lat1}},
+    lng: {{ accepted_order.lng1}},
+}
+    let m2 = {
+        lat: {{accepted_order.lat2}},
+    lng: {{accepted_order.lng2}},
+}
+    if (false)
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                initMap(position.coords.latitude, position.coords.longitude)
+            },
+            function errorCallback(error) {
+                console.log(error)
+            }
+        );
+    else initMap(-15.3923, 28.3285)
+    async function initMap() {
+        console.log(m1, m2)
+        const { Map } = await google.maps.importLibrary("maps");
+        map = new Map(document.getElementById("map"), {
+            center: m1,
+            zoom: 16,
+        });
+        new google.maps.Marker({
+            position: m1,
+            map: map
+        });
+        new google.maps.Marker({
+            position: m2,
+            map: map
+        });
+        // map.addListener('click', function (e) {
+        //   console.log(e.latLng)
+        //   new google.maps.Marker({
+        //     position: {lat:e.latLng.lat(),lng:e.latLng.lng()},
+        //     map: map,
+        //     draggable:true
+        //   });
+        // });
+    }
+// initMap();
+</script>
+{% endif %}
+{% endblock page_scripts %}

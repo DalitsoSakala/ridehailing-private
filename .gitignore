@@ -15,7 +15,7 @@ profiles.clj
 /.lsp/.cache/
 /.calva/output-window/
 
-/node_modules
+node_modules/
 /log
 
 # Additional (nano, vim, e.t.c)

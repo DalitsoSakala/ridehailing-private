@@ -1,36 +1,155 @@
-<!DOCTYPE html/>
-<html>
-    <header>
-         <link rel="stylesheet" href="./order.css" />
-         <link rel="stylesheet" 
-          href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-    </header>
+{% extends "base.html" %}
 
-    <body>
-        <div id="map">
-            <img src="./images/map.jpg"/>
-        </div>
+{% block css %}
+{%style "/css/order.css" %}
+{% endblock css %}
 
-        <div class="orderBox">
-     <div class="words">
-        <div class="tags">
-            <h1>Price</h1> <h1 id="Price">K57.00</h1>
+{% block page %}
+{% if accepted_order %}
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 80vh">
+    <div class="text-center">
+        <p>The driver accepted your request!</p>
+        <a href="/ride" class="btn btn-lg btn-primary">Go to ride</a>
+    </div>
+</div>
+{%else%}
+<div class="row g-0 my-4" style="gap: 2rem">
+    <div class="col-12  col-md-4 col-lg-3 d-flex flex-column">
+        <h4 class="p-3 bg-primary col-12 text-light rounded">Available vehicles</h4>
+        <ul class="list-group list-group-flush col-12">
+            {% for vehicle in vehicles %}
+            <a href="?vehicle={{vehicle.id}}"
+                class="list-group-item list-group-item-action d-flex justify-content-between">
+                <span>Model</span>
+                <div>
+                    <strong>{{vehicle.model}}</strong>
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+            </a>
+            {% endfor %}
+        </ul>
+
+        <div class="card p-0 border-0">
+            <div class="card-body">
+            </div>
         </div>
-        
-     </div>
-            <div class="inputs">
+    </div>
+
+    <div class="col">
+        <div class="bg-primary text-light p-2 mb-2 rounded">
+            <h4>Selected vehicle</h4>
+        </div>
+        {% if selected_vehicle %}
+        <p>Driver: {{selected_vehicle_driver.first_name}} {{selected_vehicle_driver.last_name}}</p>
+        <form  class="orderBox w-100 d-block" method="post" action="/order">
+            <div class="words">
+                <div class="tags">
+                    <h1>Price</h1>
+                    <h1 id="Price">K{{selected_vehicle.rate}}</h1>
+                </div>
+
+            </div>
+            {% if order %}
+            {%else%}
+            <div id="map" style="height:500px;width:100%"></div>
+            <div class="inputs d-none">
                 <div class="inputBoxes">
-                 <i id="start-location" class="fa fa-circle"></i>
-                 <input class="box" type="text" placeholder="Pick current location" />
+                    <i id="start" class="fa fa-circle"></i>
+                    <input required class="box" name="ori-lat" type="text" placeholder="Pick current location latitude" />
+                    <input required class="box" name="ori-lng" type="text" placeholder="Pick current location longitude" />
                 </div>
                 <div class="inputBoxes">
-                 <i id="destination" class="fa fa-map-marker icon"></i>
-                 <input class="box" type="text" placeholder="Pick destination" />
+                    <i id="dest" class="fa fa-map-marker icon"></i>
+                    <input required class="box" name="dest-lat" type="text" placeholder="Pick destination location latitude" />
+                    <input required class="box" name="dest-lng" type="text" placeholder="Pick destination location longitude" />
                 </div>
             </div>
-           
+
+            {% endif %}
+            <input type="hidden" name="driver" value="{{selected_vehicle_driver.id}}">
+            {% csrf-field %}
+
+            {% if order %}
+            <button class="btn btn-danger">CANCEL ACTIVE ORDER</button>
+            {%else%}
             <button id="orderButton">ORDER</button>
-        </div>
-    </body>
-</html>
+            {% endif %}
+
+        </form>
+        {% endif %}
+
+    </div>
+</div>
+{% endif%}
+{% endblock page %}
+
+
+
+{% block page_scripts %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+        ({ key: "AIzaSyDpmDjM5CohPpVijgBNtX1vW5dDzkH1uwI", v: "weekly" });</script>
+
+<script>
+    let map;
+    let m1 = {
+        lat: -15.3923,
+    lng: 28.3285,
+}
+    let m2={...m1,lng:m1.lng+.004}
+    if (false)
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                initMap(position.coords.latitude, position.coords.longitude)
+            },
+            function errorCallback(error) {
+                console.log(error)
+            }
+        );
+    else initMap(-15.3923, 28.3285)
+    async function initMap() {
+        const { Map } = await google.maps.importLibrary("maps");
+        map = new Map(document.getElementById("map"), {
+            center: m1,
+            zoom: 16,
+            draggable:true
+        });
+         var o= new google.maps.Marker({
+            position: m1,
+            map: map,
+            label:{text:'My position',color: 'white'},
+            draggable:true
+          });
+          
+         var d= new google.maps.Marker({
+            position: m2,
+            label:{text:'My Destination',color: 'white'},
+            map: map,
+            draggable:true
+          });
+
+          google.maps.event.addListener(d, 'dragend', function() {
+            var {lat,lng}=d.getPosition()
+            m2={lat:lat(),lng:lng()}
+        });
+        google.maps.event.addListener(o, 'dragend', function() {
+            var {lat,lng}=o.getPosition()
+            m1={lat:lat(),lng:lng()}
+        });
+    }
+
+    $('#orderButton').on('click',function(){
+        console.log('submitting')
+        let f=$('form')
+        f.find('[name=ori-lat]').val(m1.lat)
+        f.find('[name=ori-lng]').val(m1.lng)
+
+        
+        f.find('[name=dest-lat]').val(m2.lat)
+        f.find('[name=dest-lng]').val(m2.lng)
+        return true
+    })
+// initMap();
+</script>
+{% endblock page_scripts %}
